@@ -1,5 +1,8 @@
 # The Bel'Air's Buvette : building a backend for eXalt famous festival drinks and snacks bar. With Java, AI, and love.
 
+Version française : [README_fr.md](README_fr.md)  
+Version española : [README_es.md](README_es.md)
+
 >  [!NOTE]
 > This project is part of the eXalt IT augmented engineer learning path, located in its [academy](https://example.com).
 
