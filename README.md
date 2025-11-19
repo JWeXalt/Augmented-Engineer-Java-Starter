@@ -3,7 +3,7 @@
 Version française : [README_fr.md](README_fr.md)  
 Version española : [README_es.md](README_es.md)
 
->  [!note]
+>[!note]
 > 
 > This project is part of the eXalt IT augmented engineer learning path, located in its [academy](https://example.com).
 
@@ -22,7 +22,7 @@ First thing first, fork this repository to your own Gitlab account :
 
 ![fork](./assets/fork.png)
 
->  [!warning]
+>[!warning]
 > 
 > Only fork the main branch !
 

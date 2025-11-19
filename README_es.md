@@ -2,7 +2,7 @@
 
 Versión original: [README.md](README.md)
 
->  [!note]
+>[!note]
 > 
 > Este proyecto forma parte del itinerario de aprendizaje de ingeniero aumentado eXalt IT, disponible en su [academy](https://example.com).
 
@@ -21,7 +21,7 @@ Primero, haz un fork de este repositorio a tu propia cuenta de Gitlab:
 
 ![fork](./assets/fork.png)
 
->  [!warning]
+>[!warning]
 > 
 > ¡Haz fork solo de la rama main!
 
