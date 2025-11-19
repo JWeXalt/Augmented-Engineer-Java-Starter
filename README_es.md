@@ -2,7 +2,8 @@
 
 Versión original: [README.md](README.md)
 
->  [!NOTE]
+>  [!note]
+> 
 > Este proyecto forma parte del itinerario de aprendizaje de ingeniero aumentado eXalt IT, disponible en su [academy](https://example.com).
 
 ¡Hola y bienvenido al repositorio del proyecto La Buvette de Bel'Air!
@@ -20,7 +21,8 @@ Primero, haz un fork de este repositorio a tu propia cuenta de Gitlab:
 
 ![fork](./assets/fork.png)
 
->  [!WARNING]
+>  [!warning]
+> 
 > ¡Haz fork solo de la rama main!
 
 Luego clónalo en tu máquina local usando IntelliJ (o tu terminal si quieres sentirte como un hacker):

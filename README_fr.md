@@ -2,7 +2,8 @@
 
 Version originale : [README.md](README.md)
 
->  [!NOTE]
+>  [!note]
+> 
 > Ce projet fait partie du parcours d'apprentissage d'ingénieur augmenté eXalt IT, disponible dans son [academie](https://example.com).
 
 Bonjour et bienvenue dans le dépôt du projet La Buvette de Bel'Air !
@@ -20,7 +21,8 @@ D'abord, forkez ce dépôt vers votre propre compte Gitlab :
 
 ![fork](./assets/fork.png)
 
->  [!WARNING]
+>  [!warning]
+> 
 > Ne forkez que la branche main !
 
 Ensuite clonez-le sur votre machine locale en utilisant IntelliJ (ou votre terminal si vous sentez l'âme d'un hacker) :

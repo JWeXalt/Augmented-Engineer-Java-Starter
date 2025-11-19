@@ -3,7 +3,8 @@
 Version française : [README_fr.md](README_fr.md)  
 Version española : [README_es.md](README_es.md)
 
->  [!NOTE]
+>  [!note]
+> 
 > This project is part of the eXalt IT augmented engineer learning path, located in its [academy](https://example.com).
 
 Hello there and welcome to the Bel'Air's Buvette project repository ! 
@@ -21,7 +22,8 @@ First thing first, fork this repository to your own Gitlab account :
 
 ![fork](./assets/fork.png)
 
->  [!WARNING]
+>  [!warning]
+> 
 > Only fork the main branch !
 
 Then clone it to your local machine using IntelliJ (or your terminal if you want to feel like a hacker) :
