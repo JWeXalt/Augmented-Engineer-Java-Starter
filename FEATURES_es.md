@@ -92,4 +92,10 @@ Reglas:
 - La transferencia de tokens debe ser confirmada por el asistente receptor
 - El saldo de tokens del asistente emisor no puede quedar negativo como resultado de la transferencia
 
+### Como barman, quiero que se envíen notificaciones periódicas a los asistentes del festival para recordarles que beban agua, ¡porque hace calor!
 
+Reglas:
+- Cada hora, se envía una notificación a todos los asistentes recordándoles que beban agua
+- La notificación incluye un mensaje amistoso y fomenta el consumo responsable
+- Si un asistente ha consumido más de 3 bebidas alcohólicas en la última hora, la notificación debe enviarse con más frecuencia, cada 30 minutos
+- La notificación debe enviarse solo entre las 11:00 y las 19:00 cada día del festival (porque después de las 19:00 es hora de festejar, y antes de las 11:00, ¡con suerte nadie bebe otra cosa que zumos de fruta!)

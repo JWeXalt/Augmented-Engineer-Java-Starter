@@ -91,4 +91,10 @@ Rules :
 - The token transfer must be confirmed by the recipient festival goer
 - The token balance of the transferring festival goer cannot become negative as a result of the transfer
 
+### As the bartender, i want regular notifications sent to the festival goers to remind them to drink water, because it's hot out there !
+Rules :
+- Every hour, a notification is sent to all festival goers reminding them to drink water
+- The notification includes a friendly message and encourages responsible drinking
+- If a festival goer has drank more than 3 alcoholic drinks in the past hour, the notification should be sent more frequently, every 30 minutes
+- The notification should be sent only between 11:00 AM and 7:00 PM each day of the festival (because past 7:00 PM, it's time to party, and before 11:00 AM, hopefully, no one is drinking anything but fruit juices !)
 

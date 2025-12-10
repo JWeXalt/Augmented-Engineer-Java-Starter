@@ -92,4 +92,10 @@ Règles :
 - Le transfert de jetons doit être confirmé par le·la festivalier·ère destinataire
 - Le solde de jetons du·de la festivalier·ère ne peut pas devenir négatif à la suite du transfert
 
+### En tant que barman·barmaid, je veux que des notifications régulières soient envoyées aux festivaliers pour leur rappeler de boire de l'eau, car il fait chaud !
 
+Règles :
+- Toutes les heures, une notification est envoyée à tous les festivaliers leur rappelant de boire de l'eau
+- La notification contient un message amical et encourage une consommation responsable
+- Si un festivalier a consommé plus de 3 boissons alcoolisées au cours de la dernière heure, la notification doit être envoyée plus fréquemment, toutes les 30 minutes
+- La notification ne doit être envoyée qu'entre 11h00 et 19h00 chaque jour du festival (parce qu'après 19h00, c'est l'heure de faire la fête, et avant 11h00, espérons-le, personne ne boit autre chose que des jus de fruits !)
