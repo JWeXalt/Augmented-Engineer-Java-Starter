@@ -1,46 +1,47 @@
-# La Buvette de Bel'Air : construire un backend pour le bar de boissons et snacks du célèbre festival eXalt. Avec du Java, de l'IA et de l'amour.
+# La Buvette de Bel'Air : construire un backend pour la célèbre buvette du festival eXalt. Avec Java, IA, et amour.
 
-Version originale : [README.md](README.md)
+Version anglaise : [README.md](README.md)  
+Version española : [README_es.md](README_es.md)
 
 >[!note]
 > 
-> Ce projet fait partie du parcours d'apprentissage d'ingénieur augmenté eXalt IT, disponible dans son [academie](https://example.com).
+> Ce projet fait partie du parcours d'apprentissage eXalt IT augmented engineer, disponible dans son [academy](https://example.com).
 
 Bonjour et bienvenue dans le dépôt du projet La Buvette de Bel'Air !
 
-Ce projet est votre terrain de jeu pour créer un système backend robuste pour gérer les boissons et les snacks !
+Ce projet est votre terrain de jeu pour créer un backend robuste de gestion des boissons et snacks !
 
-Vous allez construire le backend le plus extraordinaire en utilisant Java.
+Vous allez construire le meilleur backend possible en utilisant Java.
 
-Mais surtout, votre nouveau meilleur ami : GitHub Copilot, votre nouveau canard en caoutchouc / copain-stagiaire survitaminé de pair programming !
+Mais plus important encore, votre nouveau meilleur ami : GitHub Copilot, votre canard en caoutchouc / stagiaire trop enthousiaste pour le pair programming !
 
 
-## Pour commencer
+## Démarrage
 
-D'abord, forkez ce dépôt vers votre propre compte Gitlab :
+D'abord, forkez ce dépôt sur votre propre compte Gitlab : 
 
 ![fork](./assets/fork.png)
 
 >[!warning]
 > 
-> Ne forkez que la branche main !
+> Ne forkez que la branche `main` !
 
-Ensuite clonez-le sur votre machine locale en utilisant IntelliJ (ou votre terminal si vous sentez l'âme d'un hacker) :
+Puis clonez-le sur votre machine locale en utilisant IntelliJ (ou votre terminal si vous voulez vous sentir hacker) :
 
 ### IntelliJ
 
-Récupérez l'URL de votre dépôt forké depuis Gitlab :
+Récupérez l'URL de votre fork sur Gitlab :
 
 ![clone](assets/clone.png)
 
-Puis dans IntelliJ, allez dans `New`, `Project from version control`, cliquez et collez l'URL que vous venez de copier dans le champ prévu à cet effet.
+Ensuite dans IntelliJ, allez à `New`, `Project from version control`, cliquez et collez l'URL que vous venez de copier.
 
 ![new_project.png](assets/new_project.png)
 
 ### Terminal
 
 ```bash
-git clone <URL_DE_VOTRE_FORK_git>
+git clone <YOUR_FORK git url>
 cd belairs-buvette
 ```
 
@@ -48,31 +49,38 @@ Puis ouvrez le dossier dans IntelliJ (`New` -> `Project from existing sources`).
 
 ### Miroir vers GitHub
 
-Pour pouvoir utiliser correctement les fonctionnalités IA avancées avec Copilot, miroirisez aussi ce dépôt sur votre compte GitHub.
+Pour pouvoir utiliser correctement les fonctionnalités IA avancées avec Copilot, miroir ce dépôt sur votre compte GitHub également.
 
-Créez d'abord un nouveau dépôt vide sur GitHub appelé `belairs-buvette`.
+Créez d'abord un nouveau dépôt vide sur GitHub nommé `belairs-buvette`.
 
 Puis ajoutez la remote GitHub à votre configuration git locale :
 
 ```bash
-git remote add github  <l'URL_de_votre_nouveau_dépôt_GitHub>
+git remote add github  <the URL of your new GitHub repository>
 git branch -M main
 git push -u github main
 ```
 
-Vous êtes prêt !
+Vous êtes prêt·e !
 
-Pour construire le projet, vous pouvez utiliser le wrapper Gradle inclus dans le projet.
+Pour compiler le projet, vous pouvez utiliser le wrapper Gradle inclus dans le projet.
 
 ```bash
 ./gradlew build
 ```
 
-Pour tester le projet, vous pouvez utiliser la commande suivante :
+Pour tester le projet :
 
 ```bash
 ./gradlew test
 ```
 
-Bon codage !
+## Étapes suivantes
 
+Maintenant que votre environnement de développement est prêt, il est temps de plonger dans le projet.
+
+Commencez par suivre le reste du matériel de formation fourni dans l'[academy](https://example.com).
+
+Vous pouvez aussi consulter le fichier [FEATURES_fr.md](./FEATURES_fr.md) pour avoir une idée des fonctionnalités à implémenter.
+
+Bon codage !

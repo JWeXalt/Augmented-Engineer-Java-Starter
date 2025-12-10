@@ -74,4 +74,12 @@ To test the project, you can use the following command :
 ./gradlew test
 ```
 
+## Next Steps
+
+Now that you have your development environment set up, it's time to dive into the project.
+
+Start by following the rest of the formation material provided in the [academy](https://example.com).
+
+You can also look into the [FEATURES.md](./FEATURES.md) file to get an idea of the features you will be implementing.
+
 Happy coding !

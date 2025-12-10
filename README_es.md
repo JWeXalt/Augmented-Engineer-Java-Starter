@@ -1,66 +1,67 @@
-# Casa Bel'Aire: construir un backend para el bar de bebidas y snacks del famoso festival eXalt. Con Java, IA y amor.
+# La Buvette de Bel'Air : construyendo un backend para la famosa buvette del festival eXalt. Con Java, IA y amor.
 
-Versión original: [README.md](README.md)
+Versión inglesa : [README.md](README.md)  
+Versión francesa : [README_fr.md](README_fr.md)
 
 >[!note]
 > 
-> Este proyecto forma parte del itinerario de aprendizaje de ingeniero aumentado eXalt IT, disponible en su [academy](https://example.com).
+> Este proyecto forma parte del camino de aprendizaje eXalt IT augmented engineer, ubicado en su [academy](https://example.com).
 
 ¡Hola y bienvenido al repositorio del proyecto La Buvette de Bel'Air!
 
-Este proyecto es tu campo de pruebas para crear un sistema backend robusto para gestionar las bebidas y los snacks.
+Este proyecto es tu terreno de juego para crear un backend robusto de gestión de bebidas y snacks !
 
-Vas a construir el backend más fantástico usando Java.
+Vas a construir el mejor backend posible usando Java.
 
-Pero, lo más importante, tu nuevo mejor amigo: GitHub Copilot, tu nuevo patito de goma / becario sobreentusiasta para programar en pareja.
+Pero, lo más importante, tu nuevo mejor amigo: GitHub Copilot, tu pato de goma / becario demasiado entusiasta para el pair programming !
 
 
-## Para empezar
+## Dónde empezar
 
-Primero, haz un fork de este repositorio a tu propia cuenta de Gitlab:
+Primero haz un fork de este repositorio a tu propia cuenta de Gitlab :
 
 ![fork](./assets/fork.png)
 
 >[!warning]
 > 
-> ¡Haz fork solo de la rama main!
+> ¡Solo hacer fork de la rama `main` !
 
-Luego clónalo en tu máquina local usando IntelliJ (o tu terminal si quieres sentirte como un hacker):
+Luego clónalo en tu máquina local usando IntelliJ (o tu terminal si quieres sentirte hacker) :
 
 ### IntelliJ
 
-Obtén la URL de tu repositorio fork desde Gitlab:
+Obtén la URL de tu fork desde Gitlab :
 
 ![clone](assets/clone.png)
 
-Luego en IntelliJ, ve a `New`, `Project from version control`, haz clic y pega la URL que acabas de copiar en el campo correspondiente.
+Luego en IntelliJ, ve a `New`, `Project from version control`, haz clic y pega la URL que acabas de copiar.
 
 ![new_project.png](assets/new_project.png)
 
 ### Terminal
 
 ```bash
-git clone <LA_URL_DE_TU_FORK_git>
+git clone <YOUR_FORK git url>
 cd belairs-buvette
 ```
 
-Después abre la carpeta en IntelliJ (`New` -> `Project from existing sources`).
+Luego abre la carpeta en IntelliJ (`New` -> `Project from existing sources`).
 
 ### Espejar en GitHub
 
-Para poder usar correctamente las funciones de IA más avanzadas con Copilot, espeja también este repositorio en tu cuenta de GitHub.
+Para poder usar correctamente las funcionalidades IA avanzadas con Copilot, espeja este repositorio en tu cuenta GitHub también.
 
 Primero crea un nuevo repositorio vacío en GitHub llamado `belairs-buvette`.
 
-Luego añade el remote de GitHub a tu configuración git local:
+Luego añade el remote GitHub a tu configuración git local :
 
 ```bash
-git remote add github  <la_URL_de_tu_nuevo_repositorio_GitHub>
+git remote add github  <the URL of your new GitHub repository>
 git branch -M main
 git push -u github main
 ```
 
-¡Ya estás listo!
+¡Estás listo!
 
 Para compilar el proyecto, puedes usar el wrapper de Gradle incluido en el proyecto.
 
@@ -68,11 +69,18 @@ Para compilar el proyecto, puedes usar el wrapper de Gradle incluido en el proye
 ./gradlew build
 ```
 
-Para ejecutar las pruebas del proyecto, puedes usar el siguiente comando:
+Para ejecutar las pruebas del proyecto :
 
 ```bash
 ./gradlew test
 ```
 
-¡Feliz codificación!
+## Próximos pasos
 
+Ahora que tu entorno de desarrollo está listo, es hora de sumergirte en el proyecto.
+
+Comienza siguiendo el resto del material de formación proporcionado en la [academy](https://example.com).
+
+También puedes consultar el archivo [FEATURES_es.md](./FEATURES_es.md) para hacerte una idea de las funcionalidades que implementarás.
+
+¡Feliz programación!
