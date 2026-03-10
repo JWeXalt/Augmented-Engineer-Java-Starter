@@ -5,7 +5,7 @@ Versión francesa : [README_fr.md](README_fr.md)
 
 >[!note]
 > 
-> Este proyecto forma parte del camino de aprendizaje eXalt IT augmented engineer, ubicado en su [academy](https://example.com).
+> Este proyecto forma parte del camino de aprendizaje eXalt IT augmented engineer, ubicado en su [academy](https://academy.exalt-company.com/paths/699c49f3a1dffef24c46c739/home).
 
 ¡Hola y bienvenido al repositorio del proyecto La Buvette de Bel'Air!
 
@@ -49,7 +49,7 @@ git clone <URL_DE_TU_FORK>
 cd belairs-buvette
 ```
 
-Abre la carpeta en IntelliJ (`New` → `Project from existing sources`) o cualquier IDE de tu elección.
+Abre la carpeta en VS Code o cualquier IDE de tu elección.
 
 ### Espejar en GitHub
 
@@ -75,7 +75,7 @@ git push -u github main
 
 ## Próximos pasos
 
-Comienza siguiendo el material de formación en la [academy](https://example.com).
+Comienza siguiendo el material de formación en la [academy](https://academy.exalt-company.com/paths/699c49f3a1dffef24c46c739/home).
 
 Consulta [FEATURES_es.md](./FEATURES_es.md) para la lista completa de historias de usuario y criterios de aceptación.
 
