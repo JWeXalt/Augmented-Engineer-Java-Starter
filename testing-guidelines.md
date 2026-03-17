@@ -14,6 +14,13 @@ Strict rules for writing and organizing tests:
 - **Test Methods**
   - Method names must clearly describe the scenario and expected outcome.
   - Use the Given-When-Then pattern in all tests.
+  - Separate each part by a commentary:
+    //given
+    ...
+    //when
+    ...
+    //then
+    ...
 
   **Example:**
   ```java
