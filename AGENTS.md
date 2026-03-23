@@ -38,11 +38,11 @@ The project follows a Hexagonal Architecture (Ports and Adapters), organized int
 
 The following guidelines are strictly enforced in this repository:
 
-- [Java Coding Guidelines](java-coding-guidelines.md): Rules for code structure, style, naming, architecture, and logging. Use when implementing or refactoring code.
-- [Testing Guidelines](testing-guidelines.md): Requirements for unit/integration tests, coverage, patterns, and CI integration. Use when working on tests.
-- [Documentation Guidelines](documentation-guidelines.md): Standards for Javadoc, inline comments, TODOs, and API documentation. Use for documenting code.
+- [Java Coding Guidelines](docs\agents\java-coding-guidelines.md): Rules for code structure, style, naming, architecture, and logging. Use when implementing or refactoring code.
+- [Testing Guidelines](docs\agents\testing-guidelines.md): Requirements for unit/integration tests, coverage, patterns, and CI integration. Use when working on tests.
+- [Documentation Guidelines](docs\agents\documentation-guidelines.md): Standards for Javadoc, inline comments, TODOs, and API documentation. Use for documenting code.
 - [Code Review Guidelines](code-review-guidelines.md): Checklist for code quality, architecture, and merge readiness. Use when reviewing code.
-- [Git Guidelines](git-guidelines.md): Strict rules for GitLab workflow, branching, commits, merge requests, tagging, and security. Use for all source control operations.
+- [Git Guidelines](docs\agents\git-guidelines.md): Strict rules for GitLab workflow, branching, commits, merge requests, tagging, and security. Use for all source control operations.
 
 #### MAJOR : Active Partner
 
