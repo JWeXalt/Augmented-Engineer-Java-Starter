@@ -11,6 +11,7 @@ plugins {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":infrastructure"))
+    implementation("org.springframework:spring-web:6.1.6")
 }
 
 application {
