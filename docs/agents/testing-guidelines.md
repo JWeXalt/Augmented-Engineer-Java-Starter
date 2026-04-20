@@ -43,6 +43,13 @@ Strict rules for writing and organizing tests:
   - Use builders or factory methods for creating test data.
   - Avoid hardcoding values directly in test methods.
 
+- **Running Tests**
+  - Use the following command to run all tests:
+    ```
+    ./gradlew test
+    ```
+  - When announcing that tests are being run, always prefix the message with the 🧪 emoji.
+
 - **CI Integration**
   - All tests must pass before merging code.
   - Failing or ignored tests are not allowed in the main branch.

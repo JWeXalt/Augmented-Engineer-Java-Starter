@@ -16,6 +16,8 @@ This document defines the strictly enforced Java coding guidelines for the Belai
 
 The codebase strictly follows Hexagonal Architecture (Ports and Adapters) with clear module separation:
 
+CRITICAL : DO NOT FORGET Ports and Adapters between each layer.
+
 - **Application Module**
   - Contains REST API controllers, DTOs, and exposed endpoints.
   - Handles input validation, request mapping, and response formatting.
@@ -47,29 +49,6 @@ application/
   src/main/java/com/it/exalt/belair/application/controller/...
 
 domain/
-
-  - Use SLF4J for all logging. Do not use java.util.logging, Log4j, or other logging APIs directly.
-  - Inject logger instances using the standard SLF4J pattern.
-
-  - Declare logger as a private static final field in each class.
-
-  **Example:**
-  ```java
-  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(MyClass.class);
-  ```
-
-  - Log at appropriate levels: error, warn, info, debug, trace.
-  - Use parameterized logging instead of string concatenation.
-  - Do not log sensitive information.
-  - Log exceptions with stack traces at the point of catch.
-
-  **Example:**
-  ```java
-  logger.info("Processing order: {}", orderId);
-  logger.error("Failed to process order", exception);
-  ```
-
-
 
 **Architecture Diagram:**
 ```
@@ -258,14 +237,12 @@ Strict rules for handling exceptions:
 - **Catching Exceptions**
   - Catch only exceptions you can handle meaningfully.
   - Never catch `Exception` or `Throwable` unless absolutely necessary (and document why).
-  - Always log exceptions at the point of catch, and rethrow if the error cannot be handled locally.
 
   **Example:**
   ```java
   try {
       repository.save(order);
   } catch (DataAccessException ex) {
-      logger.error("Failed to save order", ex);
       throw new OrderPersistenceException("Could not persist order", ex);
   }
   ```

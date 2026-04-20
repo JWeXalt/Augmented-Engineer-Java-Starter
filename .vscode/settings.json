@@ -1,0 +1,10 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "chat.tools.terminal.autoApprove": {
+        ".\\gradlew": true,
+        "Test-Path": true,
+        "ForEach-Object": true,
+        "javap": true
+    }
+}
