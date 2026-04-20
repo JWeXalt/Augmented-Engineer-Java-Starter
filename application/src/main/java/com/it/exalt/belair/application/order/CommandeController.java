@@ -6,9 +6,15 @@ import com.it.exalt.belair.domain.order.PlaceOrderUseCase;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.stream.Collectors;
 
+@RestController
+@RequestMapping("/commandes")
 public class CommandeController {
 
     private final PlaceOrderUseCase placeOrderUseCase;
@@ -17,7 +23,8 @@ public class CommandeController {
         this.placeOrderUseCase = placeOrderUseCase;
     }
 
-    public ResponseEntity<PlaceOrderResponse> placerCommande(PlaceOrderRequest request) {
+    @PostMapping
+    public ResponseEntity<PlaceOrderResponse> placerCommande(@RequestBody PlaceOrderRequest request) {
         if (request.festivalierId() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
