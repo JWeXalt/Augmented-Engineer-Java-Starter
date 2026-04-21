@@ -6,13 +6,17 @@
 
 plugins {
     id("buildlogic.java-application-conventions")
+    id("org.springframework.boot") version "3.2.5"
 }
 
 dependencies {
     implementation(project(":domain"))
     implementation(project(":infrastructure"))
-    implementation("org.springframework:spring-web:6.1.6")
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.2.5"))
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    runtimeOnly("com.h2database:h2")
 }
 
 application {
+    mainClass = "com.it.exalt.belair.application.BelairBuvetteApplication"
 }
