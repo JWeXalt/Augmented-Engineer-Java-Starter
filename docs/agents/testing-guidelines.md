@@ -34,7 +34,37 @@ Strict rules for writing and organizing tests:
 
 - **Isolation**
   - Unit tests must not depend on external systems (e.g., databases, APIs).
-  - CRITICAL : Use Spring to mock external systems and inject it to your classes. Use Mockito to mock a dependency behavior.
+  - CRITICAL : Use Mockito to mock external systems and inject it to your classes.  
+  - Use `@ExtendWith(MockitoExtension.class)` at the class level to enable Mockito in JUnit 5 unit tests.
+  - Use `@Mock` to create a mock of a dependency, and `@InjectMocks` to instantiate the class under test with those mocks injected.
+  - Use `when(...).thenReturn(...)` to define mock behavior for specific method calls.
+
+  **Example:**
+  ```java
+  @ExtendWith(MockitoExtension.class)
+  class PlaceFoodOrderUseCaseTest {
+
+      @Mock
+      private OrderRepository orderRepository;
+
+      @InjectMocks
+      private PlaceFoodOrderUseCase placeFoodOrderUseCase;
+
+      @Test
+      void givenValidOrder_whenPlaceOrder_thenOrderIsSaved() {
+          // Given
+          FoodOrder order = FoodOrder.builder().id(OrderId.of("order-1")).build();
+          when(orderRepository.save(order)).thenReturn(order);
+
+          // When
+          FoodOrder result = placeFoodOrderUseCase.execute(order);
+
+          // Then
+          assertThat(result).isEqualTo(order);
+          verify(orderRepository).save(order);
+      }
+  }
+  ```
 - **Assertions**
   - Use expressive assertions; avoid bare `assertTrue` or `assertFalse` unless necessary.
 

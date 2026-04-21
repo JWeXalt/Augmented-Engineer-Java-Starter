@@ -38,7 +38,7 @@ class PlaceOrderUseCaseTest {
     private StockPort stockPort;
 
     @Mock
-    private OrderPort orderPort;
+    private OrderRepositoryPort orderPort;
 
     private PlaceOrderUseCase placeOrderUseCase;
 

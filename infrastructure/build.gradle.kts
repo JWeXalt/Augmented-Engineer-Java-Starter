@@ -10,4 +10,8 @@ plugins {
 
 dependencies {
     implementation(project(":domain"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.2.5"))
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    testRuntimeOnly("com.h2database:h2")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

@@ -295,6 +295,149 @@ Strict rules for managing dependencies:
 
 ---
 
+## Spring Controllers (Application Module)
+
+All REST controllers in the Application module must follow these rules:
+
+- **Annotation**
+  - Annotate controllers with `@RestController` (not `@Controller` unless rendering views).
+  - Use `@RequestMapping` at the class level to define the base path.
+  - Use specific HTTP method annotations (`@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`) on methods — never the generic `@RequestMapping` on handler methods.
+
+  **Example:**
+  ```java
+  @RestController
+  @RequestMapping("/api/orders")
+  public class OrderController {
+
+      private final PlaceOrderUseCase placeOrderUseCase;
+
+      public OrderController(PlaceOrderUseCase placeOrderUseCase) {
+          this.placeOrderUseCase = placeOrderUseCase;
+      }
+
+      @PostMapping
+      public ResponseEntity<OrderResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest request) {
+          OrderId orderId = placeOrderUseCase.execute(request.toCommand());
+          return ResponseEntity.status(HttpStatus.CREATED).body(new OrderResponse(orderId));
+      }
+  }
+  ```
+
+- **Constructor Injection**
+  - Always inject Use Cases (not services or repositories) through the constructor. Never use `@Autowired` on fields.
+
+- **DTOs**
+  - Controllers must only accept and return DTOs, never Domain entities.
+  - Validate incoming DTOs with Bean Validation (`@Valid`, `@NotNull`, `@Size`, etc.).
+  - Map DTOs to Use Case Commands/Queries at the controller boundary.
+
+- **Response Wrapping**
+  - Always return `ResponseEntity<T>` with an explicit HTTP status code.
+  - Use `HttpStatus.OK` (200) for reads, `HttpStatus.CREATED` (201) for creations, `HttpStatus.NO_CONTENT` (204) for deletions.
+
+- **Error Handling**
+  - Do not use try/catch in controllers. Delegate error handling to a `@RestControllerAdvice` class.
+  - The advice class must map domain exceptions to appropriate HTTP responses.
+
+  **Example:**
+  ```java
+  @RestControllerAdvice
+  public class GlobalExceptionHandler {
+
+      @ExceptionHandler(OrderNotFoundException.class)
+      public ResponseEntity<ErrorResponse> handleOrderNotFound(OrderNotFoundException ex) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                               .body(new ErrorResponse(ex.getMessage()));
+      }
+  }
+  ```
+
+- **No Business Logic**
+  - Controllers must contain zero business logic. Delegate all processing to Use Cases.
+
+---
+
+## H2 Embedded Database & Repository Adapters (Infrastructure Module)
+
+The Infrastructure module uses an embedded H2 database for persistence during development and testing. Repository adapters implement the Port interfaces defined in the Domain module.
+
+- **H2 Configuration**
+  - Use the embedded H2 database, configured via `application.properties` or `application.yml` in the Application module resources.
+  - Enable the H2 console only for development profiles (`spring.h2.console.enabled=true` under a `dev` profile); never enable it in production.
+  - Use `spring.jpa.hibernate.ddl-auto=create-drop` for tests and `validate` or `none` for production profiles.
+
+  **Example (`application-dev.yml`):**
+  ```yaml
+  spring:
+    datasource:
+      url: jdbc:h2:mem:belairsdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+    h2:
+      console:
+        enabled: true
+    jpa:
+      hibernate:
+        ddl-auto: create-drop
+      show-sql: false
+  ```
+
+- **Repository Adapters**
+  - Each adapter must implement a Domain Port interface (e.g., `OrderRepositoryPort` defined in the Domain module).
+  - Name adapter classes with the suffix `Adapter` (e.g., `OrderRepositoryAdapter`).
+  - Adapters must delegate to a Spring Data JPA `JpaRepository` interface internally, named with the suffix `JpaRepository` (e.g., `OrderJpaRepository`).
+  - Never expose JPA entities outside the Infrastructure module; map them to Domain entities at the adapter boundary.
+
+  **Example:**
+  ```java
+  // Domain Port (domain module)
+  public interface OrderRepositoryPort {
+      Optional<Order> findById(OrderId id);
+      void save(Order order);
+  }
+
+  // Spring Data JPA interface (infrastructure module)
+  public interface OrderJpaRepository extends JpaRepository<OrderEntity, UUID> { }
+
+  // Adapter (infrastructure module)
+  @Component
+  public class OrderRepositoryAdapter implements OrderRepository {
+
+      private final OrderJpaRepository jpaRepository;
+      private final OrderEntityMapper mapper;
+
+      public OrderRepositoryAdapter(OrderJpaRepository jpaRepository, OrderEntityMapper mapper) {
+          this.jpaRepository = jpaRepository;
+          this.mapper = mapper;
+      }
+
+      @Override
+      public Optional<Order> findById(OrderId id) {
+          return jpaRepository.findById(id.value()).map(mapper::toDomain);
+      }
+
+      @Override
+      public void save(Order order) {
+          jpaRepository.save(mapper.toEntity(order));
+      }
+  }
+  ```
+
+- **JPA Entities**
+  - JPA entities must be in the Infrastructure module only, in a dedicated `persistence.entity` package.
+  - Never use Domain entities as JPA entities (no `@Entity` annotation on domain classes).
+  - Annotate JPA entities with `@Entity`, `@Table`, and `@Id`. Use `@GeneratedValue` only where appropriate.
+  - Use a dedicated mapper class (suffix `EntityMapper`) to convert between JPA entities and Domain objects.
+
+- **Transactions**
+  - Annotate adapter methods that write data with `@Transactional`.
+  - Read-only methods should use `@Transactional(readOnly = true)`.
+  - Never place `@Transactional` on Domain or Application classes.
+
+---
+
 ## Code Review Checklist
 
 All code must pass the following checklist before merging:

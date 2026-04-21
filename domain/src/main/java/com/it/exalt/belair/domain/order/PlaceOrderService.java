@@ -14,10 +14,10 @@ public class PlaceOrderService implements PlaceOrderUseCase {
     private final FestivalierPort festivalierPort;
     private final ArticleCatalogPort articleCatalogPort;
     private final StockPort stockPort;
-    private final OrderPort orderPort;
+    private final OrderRepositoryPort orderPort;
 
     public PlaceOrderService(FestivalierPort festivalierPort, ArticleCatalogPort articleCatalogPort,
-                             StockPort stockPort, OrderPort orderPort) {
+                             StockPort stockPort, OrderRepositoryPort orderPort) {
         this.festivalierPort = festivalierPort;
         this.articleCatalogPort = articleCatalogPort;
         this.stockPort = stockPort;
