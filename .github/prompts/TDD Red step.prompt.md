@@ -12,6 +12,7 @@ model: GPT-5 mini (copilot)
 ## CRITICAL
 - DO NOT create, modify, or generate any production code in this step.
 - This step is strictly test-only: add or update failing tests and nothing else.
+- You MUST Follow the testing guidelines in `docs\agents\testing-guidelines.md`
 
 ## Instructions
 1. Analyze the provided scenario description carefully.
@@ -20,7 +21,7 @@ model: GPT-5 mini (copilot)
 2. Check if a test file already exists for the scope of this test scenario. 
    - If it exists, append the new test case to the existing file.
    - If it does not exist, create a new test file in the appropriate directory structure based on the module (domain, application, infrastructure). 
-3. Write the test case so it accurately reflects the scenario and is expected to fail initially. You MUST Follow the testing guidelines in `docs\agents\testing-guidelines.md`
+3. Write the test case so it accurately reflects the scenario and is expected to fail initially.
 4. Run the test to confirm it fails.
 
 ## Requirements

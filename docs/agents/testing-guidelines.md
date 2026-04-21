@@ -34,8 +34,7 @@ Strict rules for writing and organizing tests:
 
 - **Isolation**
   - Unit tests must not depend on external systems (e.g., databases, APIs).
-  - Use mocks or stubs for dependencies.
-
+  - CRITICAL : Use Spring to mock external systems and inject it to your classes. Use Mockito to mock a dependency behavior.
 - **Assertions**
   - Use expressive assertions; avoid bare `assertTrue` or `assertFalse` unless necessary.
 
