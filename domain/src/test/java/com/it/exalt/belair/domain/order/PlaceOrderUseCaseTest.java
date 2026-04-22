@@ -8,9 +8,9 @@ import com.it.exalt.belair.domain.festivalier.FestivalierPort;
 import com.it.exalt.belair.domain.stock.Stock;
 import com.it.exalt.belair.domain.stock.StockPort;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -40,12 +40,8 @@ class PlaceOrderUseCaseTest {
     @Mock
     private OrderRepositoryPort orderPort;
 
-    private PlaceOrderUseCase placeOrderUseCase;
-
-    @BeforeEach
-    void setUp() {
-        placeOrderUseCase = new PlaceOrderService(festivalierPort, articleCatalogPort, stockPort, orderPort);
-    }
+    @InjectMocks
+    private PlaceOrderService placeOrderUseCase;
 
     @Test
     void givenFestivalierWithEnoughFoodTokens_whenOrderingSnack_thenSnackCosts1TokenAndBalanceDecreases() {
