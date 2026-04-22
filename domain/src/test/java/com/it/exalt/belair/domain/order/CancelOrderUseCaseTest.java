@@ -5,6 +5,7 @@ import com.it.exalt.belair.domain.article.ArticleCatalogPort;
 import com.it.exalt.belair.domain.article.FoodType;
 import com.it.exalt.belair.domain.festivalier.Festivalier;
 import com.it.exalt.belair.domain.festivalier.FestivalierPort;
+import com.it.exalt.belair.domain.festivalier.TokenBalance;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class CancelOrderUseCaseTest {
     @Test
     void givenUnacknowledgedOrder_whenCancelingOrder_thenOrderIsCancelledAndTokensAreRefunded() {
         // Given
-        Festivalier festivalier = new Festivalier("festivalier-42", 4);
+        Festivalier festivalier = new Festivalier("festivalier-42", new TokenBalance(4, 0));
         Order order = new Order("order-1", "festivalier-42", OrderStatut.EN_ATTENTE, List.of(new OrderLine("snack-cola", 1)));
 
         when(festivalierPort.findById("festivalier-42")).thenReturn(Optional.of(festivalier));

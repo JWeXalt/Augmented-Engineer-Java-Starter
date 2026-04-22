@@ -1,28 +1,29 @@
 package com.it.exalt.belair.domain.festivalier;
 
 /**
- * Represents a festival goer attending the Bel'Air festival.
+ * Aggregate root representing a festival goer attending the Bel'Air festival.
  * <p>
- * A festival goer holds a balance of food tokens used to purchase snacks and meals.
- * Token balances must never go negative.
+ * A festival goer holds a {@link TokenBalance} covering both food and drink tokens.
+ * Token balances must never go negative; the invariant is enforced by {@link TokenBalance}.
  * </p>
  *
- * <p><strong>Note:</strong> Drink token balance is not yet implemented; see FEATURES.md.</p>
+ * <p>Unspent tokens are not carried over to the next festival day. A fresh daily allocation
+ * should be obtained via {@link TokenBalance#dailyAllocation()}.</p>
  */
 public class Festivalier {
 
     private final String id;
-    private int foodTokenBalance;
+    private TokenBalance tokenBalance;
 
     /**
-     * Creates a festival goer with the given identifier and initial food token balance.
+     * Creates a festival goer with the given identifier and token balance.
      *
-     * @param id               unique identifier
-     * @param foodTokenBalance starting food token balance; must be non-negative
+     * @param id           unique identifier
+     * @param tokenBalance initial token balance; must not contain negative values
      */
-    public Festivalier(String id, int foodTokenBalance) {
+    public Festivalier(String id, TokenBalance tokenBalance) {
         this.id = id;
-        this.foodTokenBalance = foodTokenBalance;
+        this.tokenBalance = tokenBalance;
     }
 
     /** @return the unique identifier of this festival goer */
@@ -30,9 +31,19 @@ public class Festivalier {
         return id;
     }
 
+    /** @return the current token balance (food and drink) */
+    public TokenBalance getTokenBalance() {
+        return tokenBalance;
+    }
+
     /** @return the current food token balance */
     public int getFoodTokenBalance() {
-        return foodTokenBalance;
+        return tokenBalance.foodTokens();
+    }
+
+    /** @return the current drink token balance */
+    public int getDrinkTokenBalance() {
+        return tokenBalance.drinkTokens();
     }
 
     /**
@@ -42,9 +53,24 @@ public class Festivalier {
      * to credit tokens back (for a cancellation refund).
      * </p>
      *
-     * @param amount the number of tokens to deduct; use a negative value for refunds
+     * @param amount the number of food tokens to deduct; use a negative value for refunds
+     * @throws NegativeTokenBalanceException if the resulting balance would be negative
      */
     public void deductFoodTokens(int amount) {
-        this.foodTokenBalance -= amount;
+        this.tokenBalance = tokenBalance.deductFood(amount);
+    }
+
+    /**
+     * Adjusts the drink token balance by the given amount.
+     * <p>
+     * Pass a positive value to deduct tokens (for an order), or a negative value
+     * to credit tokens back (for a cancellation refund).
+     * </p>
+     *
+     * @param amount the number of drink tokens to deduct; use a negative value for refunds
+     * @throws NegativeTokenBalanceException if the resulting balance would be negative
+     */
+    public void deductDrinkTokens(int amount) {
+        this.tokenBalance = tokenBalance.deductDrink(amount);
     }
 }
