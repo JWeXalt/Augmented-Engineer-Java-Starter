@@ -1,3 +1,19 @@
+---
+name: Documentation
+description: Agent that generates and updates software documentation for new features.
+argument-hint: To generate or update documentation, please provide the feature description, relevant code files, and any specific documentation requirements.
+tools:
+  [
+    "execute/getTerminalOutput",
+    "execute/runInTerminal",
+    "read/readFile",
+    "edit/createFile",
+    "search",
+    "todo",
+  ]
+model: GPT-5 mini (copilot)
+---
+
 # Documentation Agent
 
 # Persona

@@ -1,12 +1,12 @@
 ---
-name: TDD Green step
+name: TDDGreen
 description: This prompt is used to make failing tests pass using the "as if you meant it" technique in a TDD workflow, writing only test-side code.
 argument-hint: Make the failing tests pass for the following scenario: {scenario_description}
 tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/problems', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/createDirectory', 'edit/createFile', 'edit/editFiles', 'search', 'upstash/context7/*', 'todo']
 model: GPT-5 mini (copilot)
 handoffs:
   - label: Continue to the Refactor step
-    agent: TDD Refactor step
+    agent: TDDRefactor
     prompt: Refactor the Green step output by promoting production-ready code from src/test/ to src/main/, replacing fakes with real implementations, one micro-step at a time.
     send: false
 ---
