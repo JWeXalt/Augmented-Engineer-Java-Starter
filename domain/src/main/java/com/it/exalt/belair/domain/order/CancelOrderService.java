@@ -5,6 +5,16 @@ import com.it.exalt.belair.domain.article.ArticleCatalogPort;
 import com.it.exalt.belair.domain.festivalier.Festivalier;
 import com.it.exalt.belair.domain.festivalier.FestivalierPort;
 
+/**
+ * Domain service handling order cancellation.
+ * <p>
+ * An order may only be cancelled if its status is {@link OrderStatut#EN_ATTENTE}.
+ * Upon cancellation, the food tokens spent on the order are refunded to the festival goer.
+ * </p>
+ *
+ * <p><strong>TODO</strong> [2026-04-22]: Extract a {@code CancelOrderUseCase} interface and register
+ * this service as a Spring bean in {@code DomainConfiguration}.</p>
+ */
 public class CancelOrderService {
 
     private final OrderRepositoryPort orderRepositoryPort;

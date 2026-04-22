@@ -9,6 +9,21 @@ import com.it.exalt.belair.domain.stock.StockPort;
 
 import java.util.UUID;
 
+/**
+ * Domain service implementing the {@link PlaceOrderUseCase} primary port.
+ * <p>
+ * Orchestrates the full place-order workflow:
+ * <ol>
+ *   <li>Validates the festival goer exists</li>
+ *   <li>Validates each requested article exists in the catalog</li>
+ *   <li>Checks that stock is sufficient for each article</li>
+ *   <li>Calculates the total food token cost</li>
+ *   <li>Verifies the festival goer has enough tokens</li>
+ *   <li>Deducts tokens and stock</li>
+ *   <li>Persists the order in {@link OrderStatut#EN_ATTENTE} status</li>
+ * </ol>
+ * </p>
+ */
 public class PlaceOrderService implements PlaceOrderUseCase {
 
     private final FestivalierPort festivalierPort;

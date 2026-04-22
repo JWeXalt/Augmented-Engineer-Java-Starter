@@ -13,6 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.stream.Collectors;
 
+/**
+ * REST controller exposing the order management API.
+ * <p>
+ * All business logic is delegated to use cases. This controller is responsible only for
+ * request validation, command mapping, and response formatting.
+ * </p>
+ *
+ * <p><strong>Note:</strong> Error handling for domain exceptions (e.g. insufficient tokens,
+ * out-of-stock) should be moved to a {@code @RestControllerAdvice}.</p>
+ */
 @RestController
 @RequestMapping("/commandes")
 public class CommandeController {

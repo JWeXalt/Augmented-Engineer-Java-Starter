@@ -79,4 +79,6 @@ Start by following the formation material in the [academy](https://academy.exalt
 
 Read [FEATURES.md](./FEATURES.md) for the list of user stories and acceptance criteria.
 
+Read [docs/PROJECT_STATUS.md](./docs/PROJECT_STATUS.md) for the current implementation state, known gaps, and next priorities.
+
 Happy coding!
