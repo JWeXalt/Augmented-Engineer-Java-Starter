@@ -16,9 +16,11 @@ model: GPT-5 mini (copilot)
 
 ## Concept: "As If You Meant It"
 
-The **"as if you meant it"** technique consists of making a failing test pass as quickly as possible by writing the simplest possible implementation **inside the test scope** — using fakes, stubs, in-memory implementations, or anonymous classes — without touching any production file.
+The **"as if you meant it"** technique consists of making a failing test pass as quickly as possible by writing the simplest possible implementation **inside the test scope** — without touching any production file.
 
-The goal is **not** to build the real implementation. The goal is to validate the test design, confirm the test is correctly written, and turn it green by faking what the production code would eventually do.
+Because the Red step writes Mockito-based tests (`@Mock`, `@InjectMocks`, `@ExtendWith(MockitoExtension.class)`), the missing pieces are **not** fakes or fixtures but the **types themselves**: domain entities, value objects, DTOs, port interfaces, and the class under test. These must be created as minimal stubs in `src/test/`, just complete enough to compile and satisfy the Mockito annotations.
+
+The goal is **not** to build the real implementation. The goal is to validate the test design, confirm the test is correctly written, and turn it green using the stubs while Mockito handles the mocking of dependencies.
 
 ## Instructions
 
@@ -29,99 +31,162 @@ The goal is **not** to build the real implementation. The goal is to validate th
    - Identify what types, interfaces, collaborators, and behaviors the tests depend on.
    - Identify what is missing (types that don't compile, method signatures not found, missing fixtures, etc.).
 3. Make the tests compile and pass using **test-side code only**:
-   - Create or update **fixture classes**, **test state helpers**, **in-memory fakes**, or **test doubles** inside the test source tree.
-   - If a production interface/type needs to be instantiated, create a **fake or stub implementation** in the test directory, not in `src/main/`.
-   - Use the **simplest logic possible**: hardcoded returns, in-memory collections, or minimal conditional logic are acceptable here.
+   - Identify every missing type referenced in the test: domain entities, value objects, DTOs, command/query objects, port interfaces, and the class under test (`@InjectMocks`).
+   - Create a **minimal stub** for each missing type inside `src/test/`, in the same package the test expects it to be.
+   - For the class under test, implement just enough: declare the Mockito-injectable fields (matching the `@Mock` types), a constructor accepting them, and an `execute()` / command method with the simplest logic that delegates to the injected mocks and returns the expected type.
+   - For port interfaces, declare only the method signatures used by the test.
+   - Use the **simplest logic possible**: single-method delegations to mocked ports are the norm.
 4. Run the tests again to confirm all previously failing tests are now **green**.
 5. If any test is still failing, iterate on the test-side code only until all tests pass.
 
 ## Requirements
 - You **MUST** follow the testing guidelines in `docs\agents\testing-guidelines.md`.
 - You **MUST NOT** write, modify, or delete any file under `src/main/`.
-- Fake implementations **MUST** live under `src/test/`, in a package that mirrors the production package (e.g., `com.example.domain.test.fake`).
-- Fixture and test state classes introduced here **MUST** be reusable in subsequent TDD steps.
+- Stub types **MUST** live under `src/test/`, in the package the test already imports them from.
+- Stub classes **MUST** be minimal: no more logic than what the test exercises.
 - The test suite **MUST** be fully green at the end of this step.
 
 ## Examples
 
-### Domain test example: making a failing use case test pass
+### Domain test example: making a Mockito-based failing use case test pass
 
 Failing test (from Red step):
 
 ```java
-@Test
-void shouldProduceExportDtoWhenContactsExist() {
-    TestState<User> userTestState = fixture.getUserTestState();
-    TestState<Contact> contactTestState = fixture.getContactTestState();
-    UseCaseHandler<ExportContactQuery, ContactExportDto> handler = fixture.getUseCaseHandler();
+@ExtendWith(MockitoExtension.class)
+class ContactExportUseCaseTest {
 
-    User user = new User("user1");
-    userTestState.add(user);
-    List<Contact> contacts = IntStream.range(0, 20)
-            .mapToObj(i -> new Contact("Contact " + i, "contact" + i + "@example.com"))
-            .collect(Collectors.toList());
-    contacts.forEach(contactTestState::add);
+    @Mock
+    private ContactRepositoryPort contactRepositoryPort;
 
-    ExportContactQuery query = new ExportContactQuery(user.getId());
-    ContactExportDto exportDto = handler.execute(query);
+    @Mock
+    private UserRepositoryPort userRepositoryPort;
 
-    assertThat(exportDto).isNotNull();
-    assertThat(exportDto.getContacts()).hasSize(20);
-}
-```
+    @InjectMocks
+    private ContactExportService contactExportUseCase;
 
-Expected Output (test-side code only):
+    @Test
+    void shouldProduceExportDtoWhenContactsExist() {
+        // Given a user with 20 contacts
+        User user = new User("user-1");
+        List<Contact> contacts = IntStream.range(0, 20)
+                .mapToObj(i -> new Contact("Contact " + i, "contact" + i + "@example.com"))
+                .collect(Collectors.toList());
+        when(userRepositoryPort.findById("user-1")).thenReturn(Optional.of(user));
+        when(contactRepositoryPort.findAllByUserId("user-1")).thenReturn(contacts);
 
-- `domain/src/test/java/com/example/domain/test/state/TestState.java` — generic in-memory store
-- `domain/src/test/java/com/example/domain/test/fake/InMemoryContactRepository.java` — fake implementing the `ContactRepository` port
-- `domain/src/test/java/com/example/domain/contact/ContactExportFixture.java` — wires the use case with fake collaborators
+        // When executing a query to fetch contacts
+        ExportContactQuery query = new ExportContactQuery("user-1");
+        ContactExportDto exportDto = contactExportUseCase.execute(query);
 
-```java
-// ContactExportFixture.java
-package com.example.domain.contact;
-
-import com.example.domain.test.fake.InMemoryContactRepository;
-import com.example.domain.test.state.TestState;
-
-public class ContactExportFixture {
-
-    private final TestState<User> userTestState = new TestState<>();
-    private final TestState<Contact> contactTestState = new TestState<>();
-    private final InMemoryContactRepository contactRepository;
-    private final UseCaseHandler<ExportContactQuery, ContactExportDto> handler;
-
-    public ContactExportFixture() {
-        this.contactRepository = new InMemoryContactRepository(contactTestState);
-        this.handler = new ContactExportUseCaseHandler(contactRepository);
+        // Then the system retrieves all 20 contacts and generates an export DTO
+        assertNotNull(exportDto);
+        assertEquals(20, exportDto.getContacts().size());
     }
-
-    public TestState<User> getUserTestState() { return userTestState; }
-    public TestState<Contact> getContactTestState() { return contactTestState; }
-    public UseCaseHandler<ExportContactQuery, ContactExportDto> getUseCaseHandler() { return handler; }
 }
 ```
 
+Expected Output (test-side code only) — one stub per missing type:
+
+- `domain/src/test/java/com/example/domain/contact/port/ContactRepositoryPort.java` — stub port interface
+- `domain/src/test/java/com/example/domain/user/UserRepositoryPort.java` — stub port interface
+- `domain/src/test/java/com/example/domain/user/User.java` — stub entity
+- `domain/src/test/java/com/example/domain/contact/Contact.java` — stub entity
+- `domain/src/test/java/com/example/domain/contact/ExportContactQuery.java` — stub query object
+- `domain/src/test/java/com/example/domain/contact/ContactExportDto.java` — stub DTO
+- `domain/src/test/java/com/example/domain/contact/ContactExportService.java` — stub service (class under test)
+
 ```java
-// InMemoryContactRepository.java
-package com.example.domain.test.fake;
+// ContactRepositoryPort.java
+package com.example.domain.contact.port;
 
 import com.example.domain.contact.Contact;
-import com.example.domain.contact.ContactRepository;
-import com.example.domain.test.state.TestState;
+import java.util.List;
+
+public interface ContactRepositoryPort {
+    List<Contact> findAllByUserId(String userId);
+}
+```
+
+```java
+// UserRepositoryPort.java
+package com.example.domain.user;
+
+import java.util.Optional;
+
+public interface UserRepositoryPort {
+    Optional<User> findById(String userId);
+}
+```
+
+```java
+// User.java
+package com.example.domain.user;
+
+public class User {
+    private final String id;
+    public User(String id) { this.id = id; }
+    public String getId() { return id; }
+}
+```
+
+```java
+// Contact.java
+package com.example.domain.contact;
+
+public class Contact {
+    private final String name;
+    private final String email;
+    public Contact(String name, String email) { this.name = name; this.email = email; }
+}
+```
+
+```java
+// ExportContactQuery.java
+package com.example.domain.contact;
+
+public class ExportContactQuery {
+    private final String userId;
+    public ExportContactQuery(String userId) { this.userId = userId; }
+    public String getUserId() { return userId; }
+}
+```
+
+```java
+// ContactExportDto.java
+package com.example.domain.contact;
 
 import java.util.List;
 
-public class InMemoryContactRepository implements ContactRepository {
+public class ContactExportDto {
+    private final List<Contact> contacts;
+    public ContactExportDto(List<Contact> contacts) { this.contacts = contacts; }
+    public List<Contact> getContacts() { return contacts; }
+}
+```
 
-    private final TestState<Contact> state;
+```java
+// ContactExportService.java — stub service, class under test
+package com.example.domain.contact;
 
-    public InMemoryContactRepository(TestState<Contact> state) {
-        this.state = state;
+import com.example.domain.contact.port.ContactRepositoryPort;
+import com.example.domain.user.UserRepositoryPort;
+import java.util.List;
+
+public class ContactExportService {
+
+    private final ContactRepositoryPort contactRepositoryPort;
+    private final UserRepositoryPort userRepositoryPort;
+
+    public ContactExportService(ContactRepositoryPort contactRepositoryPort,
+                                UserRepositoryPort userRepositoryPort) {
+        this.contactRepositoryPort = contactRepositoryPort;
+        this.userRepositoryPort = userRepositoryPort;
     }
 
-    @Override
-    public List<Contact> findAll() {
-        return state.getAll();
+    public ContactExportDto execute(ExportContactQuery query) {
+        List<Contact> contacts = contactRepositoryPort.findAllByUserId(query.getUserId());
+        return new ContactExportDto(contacts);
     }
 }
 ```
@@ -139,28 +204,21 @@ It will be used as input for the **TDD Refactor step**.
     {
       "path": "<module>/src/test/java/<package path>/<ClassName>.java",
       "class": "<fully.qualified.ClassName>",
-      "role": "<test | fixture | fake | state_helper>"
+      "role": "<test | stub>"
     }
   ],
   "production_candidates": [
     {
-      "fake_path": "<module>/src/test/java/<package>/<FakeClass>.java",
+      "stub_path": "<module>/src/test/java/<package>/<StubClass>.java",
       "target_path": "<module>/src/main/java/<package>/<RealClass>.java",
       "class": "<fully.qualified.RealClass>",
       "implements": ["<fully.qualified.InterfaceName>"],
-      "type": "<use_case | entity | value_object | domain_service | port_implementation>"
-    }
-  ],
-  "fixtures_to_update": [
-    {
-      "path": "<module>/src/test/java/<package>/<Fixture>.java",
-      "class": "<fully.qualified.Fixture>",
-      "update": "<description of what must change to wire the real implementation instead of the fake>"
+      "type": "<use_case | entity | value_object | domain_service | port | port_implementation>"
     }
   ],
   "test_doubles_to_remove": [
     {
-      "path": "<module>/src/test/java/<package>/<FakeClass>.java",
+      "path": "<module>/src/test/java/<package>/<StubClass>.java",
       "reason": "<e.g., replaced by production implementation in src/main/>"
     }
   ]
@@ -168,10 +226,9 @@ It will be used as input for the **TDD Refactor step**.
 ```
 
 **Rules for filling the JSON:**
-- `produced_files`: list **every** file created or modified during this step, with its role.
-- `production_candidates`: include only classes that contain **business logic or implement domain ports** that belong in `src/main/` (e.g., use case handlers, domain services). Do **not** include in-memory repository fakes here — those are permanent test infrastructure.
-- `fixtures_to_update`: list fixture classes that will need to swap the fake for the real implementation.
-- `test_doubles_to_remove`: list only the fakes that will become **obsolete** once their real counterpart exists in `src/main/`. `fixture` and `state_helper` roles must **never** appear here.
+- `produced_files`: list **every** file created or modified during this step, with its role (`test` for test classes, `stub` for all other stubs created in `src/test/`).
+- `production_candidates`: include every stub that contains **business logic, domain types, or port definitions** that belong in `src/main/`. This includes the service/use-case class, domain entities, value objects, DTOs, and port interfaces. List each as a separate entry.
+- `test_doubles_to_remove`: list the stub files that will become **obsolete** once their real counterparts exist in `src/main/`. This is typically all `stub` role files.
 
 ### Example JSON output
 
@@ -181,34 +238,31 @@ It will be used as input for the **TDD Refactor step**.
   "module": "domain",
   "produced_files": [
     { "path": "domain/src/test/java/com/example/domain/contact/ContactExportUseCaseTest.java", "class": "com.example.domain.contact.ContactExportUseCaseTest", "role": "test" },
-    { "path": "domain/src/test/java/com/example/domain/contact/ContactExportFixture.java", "class": "com.example.domain.contact.ContactExportFixture", "role": "fixture" },
-    { "path": "domain/src/test/java/com/example/domain/test/state/TestState.java", "class": "com.example.domain.test.state.TestState", "role": "state_helper" },
-    { "path": "domain/src/test/java/com/example/domain/test/fake/InMemoryContactRepository.java", "class": "com.example.domain.test.fake.InMemoryContactRepository", "role": "fake" },
-    { "path": "domain/src/test/java/com/example/domain/contact/ContactExportUseCaseHandler.java", "class": "com.example.domain.contact.ContactExportUseCaseHandler", "role": "fake" }
+    { "path": "domain/src/test/java/com/example/domain/contact/port/ContactRepositoryPort.java", "class": "com.example.domain.contact.port.ContactRepositoryPort", "role": "stub" },
+    { "path": "domain/src/test/java/com/example/domain/user/UserRepositoryPort.java", "class": "com.example.domain.user.UserRepositoryPort", "role": "stub" },
+    { "path": "domain/src/test/java/com/example/domain/user/User.java", "class": "com.example.domain.user.User", "role": "stub" },
+    { "path": "domain/src/test/java/com/example/domain/contact/Contact.java", "class": "com.example.domain.contact.Contact", "role": "stub" },
+    { "path": "domain/src/test/java/com/example/domain/contact/ExportContactQuery.java", "class": "com.example.domain.contact.ExportContactQuery", "role": "stub" },
+    { "path": "domain/src/test/java/com/example/domain/contact/ContactExportDto.java", "class": "com.example.domain.contact.ContactExportDto", "role": "stub" },
+    { "path": "domain/src/test/java/com/example/domain/contact/ContactExportService.java", "class": "com.example.domain.contact.ContactExportService", "role": "stub" }
   ],
   "production_candidates": [
-    {
-      "fake_path": "domain/src/test/java/com/example/domain/contact/ContactExportUseCaseHandler.java",
-      "target_path": "domain/src/main/java/com/example/domain/contact/ContactExportUseCaseHandler.java",
-      "class": "com.example.domain.contact.ContactExportUseCaseHandler",
-      "implements": ["com.example.domain.contact.UseCaseHandler"],
-      "type": "use_case"
-    }
-  ],
-  "fixtures_to_update": [
-    {
-      "path": "domain/src/test/java/com/example/domain/contact/ContactExportFixture.java",
-      "class": "com.example.domain.contact.ContactExportFixture",
-      "update": "Replace import and instantiation of the test-local ContactExportUseCaseHandler with the real class from src/main/"
-    }
+    { "stub_path": "domain/src/test/java/com/example/domain/contact/ContactExportService.java", "target_path": "domain/src/main/java/com/example/domain/contact/ContactExportService.java", "class": "com.example.domain.contact.ContactExportService", "implements": [], "type": "use_case" },
+    { "stub_path": "domain/src/test/java/com/example/domain/contact/port/ContactRepositoryPort.java", "target_path": "domain/src/main/java/com/example/domain/contact/port/ContactRepositoryPort.java", "class": "com.example.domain.contact.port.ContactRepositoryPort", "implements": [], "type": "port" },
+    { "stub_path": "domain/src/test/java/com/example/domain/user/UserRepositoryPort.java", "target_path": "domain/src/main/java/com/example/domain/user/UserRepositoryPort.java", "class": "com.example.domain.user.UserRepositoryPort", "implements": [], "type": "port" },
+    { "stub_path": "domain/src/test/java/com/example/domain/user/User.java", "target_path": "domain/src/main/java/com/example/domain/user/User.java", "class": "com.example.domain.user.User", "implements": [], "type": "entity" },
+    { "stub_path": "domain/src/test/java/com/example/domain/contact/Contact.java", "target_path": "domain/src/main/java/com/example/domain/contact/Contact.java", "class": "com.example.domain.contact.Contact", "implements": [], "type": "entity" },
+    { "stub_path": "domain/src/test/java/com/example/domain/contact/ExportContactQuery.java", "target_path": "domain/src/main/java/com/example/domain/contact/ExportContactQuery.java", "class": "com.example.domain.contact.ExportContactQuery", "implements": [], "type": "value_object" },
+    { "stub_path": "domain/src/test/java/com/example/domain/contact/ContactExportDto.java", "target_path": "domain/src/main/java/com/example/domain/contact/ContactExportDto.java", "class": "com.example.domain.contact.ContactExportDto", "implements": [], "type": "value_object" }
   ],
   "test_doubles_to_remove": [
-    {
-      "path": "domain/src/test/java/com/example/domain/contact/ContactExportUseCaseHandler.java",
-      "reason": "Replaced by production implementation in domain/src/main/"
-    }
+    { "path": "domain/src/test/java/com/example/domain/contact/ContactExportService.java", "reason": "Replaced by production implementation in domain/src/main/" },
+    { "path": "domain/src/test/java/com/example/domain/contact/port/ContactRepositoryPort.java", "reason": "Replaced by production interface in domain/src/main/" },
+    { "path": "domain/src/test/java/com/example/domain/user/UserRepositoryPort.java", "reason": "Replaced by production interface in domain/src/main/" },
+    { "path": "domain/src/test/java/com/example/domain/user/User.java", "reason": "Replaced by production entity in domain/src/main/" },
+    { "path": "domain/src/test/java/com/example/domain/contact/Contact.java", "reason": "Replaced by production entity in domain/src/main/" },
+    { "path": "domain/src/test/java/com/example/domain/contact/ExportContactQuery.java", "reason": "Replaced by production value object in domain/src/main/" },
+    { "path": "domain/src/test/java/com/example/domain/contact/ContactExportDto.java", "reason": "Replaced by production value object in domain/src/main/" }
   ]
 }
 ```
-
-> Note: `InMemoryContactRepository` is **not** in `test_doubles_to_remove` — it is permanent test infrastructure used to keep domain unit tests isolated from the database.
