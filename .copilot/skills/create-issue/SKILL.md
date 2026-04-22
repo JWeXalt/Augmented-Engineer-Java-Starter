@@ -13,6 +13,7 @@ description: Create an issue in the form of a markdown file with title, descript
     4. Produce 1..N Gherkin scenarios covering happy path and edge cases.
     5. Create the issue in the `docs/features/{feature_name}/{module_name}_{issue_title}.md` file using the `templates/issue.md` template.
     6. Validate the issue using `scripts/validate_issue_format.py`.
+4. Use the Github MCP to create the issue in the repository and link it to the relevant feature epic.
     
 # Note
 - This skill is intended to create manageable issue. Typically, it should not span more than one module. 
