@@ -1,7 +1,7 @@
 ---
-name: TDDGreen
+name: TDD Green
 description: This prompt is used to make failing tests pass using the "as if you meant it" technique in a TDD workflow, writing only test-side code.
-argument-hint: Make the failing tests pass for the following scenario: {scenario_description}
+argument-hint: Make the failing tests pass for the following scenario {scenario_description}
 tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/problems', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/createDirectory', 'edit/createFile', 'edit/editFiles', 'search', 'upstash/context7/*', 'todo']
 model: GPT-5 mini (copilot)
 handoffs:

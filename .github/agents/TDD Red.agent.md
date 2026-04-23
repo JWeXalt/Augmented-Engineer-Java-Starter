@@ -1,7 +1,7 @@
 ---
-name: TDDRed
+name: TDD Red
 description: This prompt is used to implement one test scenario that fails in a TDD workflow for an AI agent
-argument-hint: Implement the following test scenario in a TDD workflow for an AI agent: {scenario_description}
+argument-hint: Implement the following test scenario in a TDD workflow for an AI agent {scenario_description}
 tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/problems', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/createDirectory', 'edit/createFile', 'edit/editFiles', 'search', 'upstash/context7/*', 'todo']
 model: GPT-5 mini (copilot)
 handoffs:

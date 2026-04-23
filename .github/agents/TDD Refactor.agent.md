@@ -1,7 +1,7 @@
 ---
-name: TDDRefactor
+name: TDD Refactor
 description: Takes the JSON output from the TDD Green step and promotes production-ready code from src/test/ to src/main/, replacing fakes with real implementations, one micro-step at a time.
-argument-hint: Refactor the following Green step output: {green_step_json}
+argument-hint: Refactor the following Green step output {green_step_json}
 tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/problems', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/createDirectory', 'edit/createFile', 'edit/editFiles', 'search', 'upstash/context7/*', 'todo']
 model: GPT-5 mini (copilot)
 ---

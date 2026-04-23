@@ -1,5 +1,5 @@
 ---
-name: TDDCycle
+name: TDD Cycle
 description: Agent that orchestrates a Test-Driven Development (TDD) cycle by invoking subagents for the Red, Green, and Refactor steps.
 argument-hint: To start a TDD cycle, please provide the feature you want to implement, a test scenario description, the existing codebase files relevant to the feature, and any constraints or requirements you have.
 tools:
