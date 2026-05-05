@@ -5,6 +5,7 @@ import com.it.exalt.belair.domain.article.ArticleCatalogPort;
 import com.it.exalt.belair.domain.article.FoodType;
 import com.it.exalt.belair.domain.festivalier.Festivalier;
 import com.it.exalt.belair.domain.festivalier.FestivalierPort;
+import com.it.exalt.belair.domain.festivalier.TokenBalance;
 import com.it.exalt.belair.domain.stock.Stock;
 import com.it.exalt.belair.domain.stock.StockPort;
 
@@ -46,7 +47,7 @@ class PlaceOrderUseCaseTest {
     @Test
     void givenFestivalierWithEnoughFoodTokens_whenOrderingSnack_thenSnackCosts1TokenAndBalanceDecreases() {
         // Given
-        Festivalier festivalier = new Festivalier("festivalier-42", 5);
+        Festivalier festivalier = new Festivalier("festivalier-42", new TokenBalance(5, 0));
         when(festivalierPort.findById("festivalier-42")).thenReturn(Optional.of(festivalier));
         when(articleCatalogPort.findById("snack-cola")).thenReturn(Optional.of(new Article("snack-cola", "Cola", FoodType.SNACK)));
         when(stockPort.findByArticleId("snack-cola")).thenReturn(Optional.of(new Stock("snack-cola", 100)));
@@ -71,7 +72,7 @@ class PlaceOrderUseCaseTest {
     @Test
     void givenFestivalierWithEnoughFoodTokens_whenOrderingMeal_thenMealCosts3TokensAndBalanceDecreases() {
         // Given
-        Festivalier festivalier = new Festivalier("festivalier-42", 5);
+        Festivalier festivalier = new Festivalier("festivalier-42", new TokenBalance(5, 0));
         when(festivalierPort.findById("festivalier-42")).thenReturn(Optional.of(festivalier));
         when(articleCatalogPort.findById("plat-pasta")).thenReturn(Optional.of(new Article("plat-pasta", "Pasta", FoodType.MEAL)));
         when(stockPort.findByArticleId("plat-pasta")).thenReturn(Optional.of(new Stock("plat-pasta", 100)));
@@ -96,7 +97,7 @@ class PlaceOrderUseCaseTest {
     @Test
     void givenFestivalierWithZeroFoodTokens_whenOrderingSnack_thenOrderIsRejected() {
         // Given
-        Festivalier festivalier = new Festivalier("festivalier-42", 0);
+        Festivalier festivalier = new Festivalier("festivalier-42", new TokenBalance(0, 0));
         when(festivalierPort.findById("festivalier-42")).thenReturn(Optional.of(festivalier));
         when(articleCatalogPort.findById("snack-cola")).thenReturn(Optional.of(new Article("snack-cola", "Cola", FoodType.SNACK)));
         when(stockPort.findByArticleId("snack-cola")).thenReturn(Optional.of(new Stock("snack-cola", 100)));
@@ -113,7 +114,7 @@ class PlaceOrderUseCaseTest {
     @Test
     void givenFestivalierWithInsufficientTokens_whenOrderWouldResultInNegativeBalance_thenOrderIsRejected() {
         // Given
-        Festivalier festivalier = new Festivalier("festivalier-42", 2);
+        Festivalier festivalier = new Festivalier("festivalier-42", new TokenBalance(2, 0));
         when(festivalierPort.findById("festivalier-42")).thenReturn(Optional.of(festivalier));
         when(articleCatalogPort.findById("plat-pasta")).thenReturn(Optional.of(new Article("plat-pasta", "Pasta", FoodType.MEAL)));
         when(stockPort.findByArticleId("plat-pasta")).thenReturn(Optional.of(new Stock("plat-pasta", 100)));
@@ -130,7 +131,7 @@ class PlaceOrderUseCaseTest {
     @Test
     void givenSufficientStock_whenOrderingArticle_thenOrderSucceedsAndStockIsDeducted() {
         // Given
-        Festivalier festivalier = new Festivalier("festivalier-42", 5);
+        Festivalier festivalier = new Festivalier("festivalier-42", new TokenBalance(5, 0));
         when(festivalierPort.findById("festivalier-42")).thenReturn(Optional.of(festivalier));
         when(articleCatalogPort.findById("mojito")).thenReturn(Optional.of(new Article("mojito", "Mojito", FoodType.SNACK)));
         when(stockPort.findByArticleId("mojito")).thenReturn(Optional.of(new Stock("mojito", 10)));
@@ -153,7 +154,7 @@ class PlaceOrderUseCaseTest {
     @Test
     void givenInsufficientStock_whenRequestedQuantityExceedsAvailableStock_thenOrderIsRejected() {
         // Given
-        Festivalier festivalier = new Festivalier("festivalier-42", 5);
+        Festivalier festivalier = new Festivalier("festivalier-42", new TokenBalance(5, 0));
         when(festivalierPort.findById("festivalier-42")).thenReturn(Optional.of(festivalier));
         when(articleCatalogPort.findById("mojito")).thenReturn(Optional.of(new Article("mojito", "Mojito", FoodType.SNACK)));
         when(stockPort.findByArticleId("mojito")).thenReturn(Optional.of(new Stock("mojito", 1)));
@@ -167,3 +168,4 @@ class PlaceOrderUseCaseTest {
         assertThrows(OutOfStockException.class, () -> placeOrderUseCase.execute(command));
     }
 }
+

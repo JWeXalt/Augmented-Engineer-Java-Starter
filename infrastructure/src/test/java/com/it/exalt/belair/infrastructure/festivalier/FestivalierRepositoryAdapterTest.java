@@ -1,6 +1,7 @@
 package com.it.exalt.belair.infrastructure.festivalier;
 
 import com.it.exalt.belair.domain.festivalier.Festivalier;
+import com.it.exalt.belair.domain.festivalier.TokenBalance;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,25 +22,35 @@ class FestivalierRepositoryAdapterTest {
 
     @Test
     void givenFestivalierSaved_whenCheckingExistsById_thenReturnsTrue() {
-        Festivalier festivalier = new Festivalier("fest-1", 10);
+        // Given
+        Festivalier festivalier = new Festivalier("fest-1", new TokenBalance(10, 0));
+
+        // When
         adapter.save(festivalier);
 
+        // Then
         assertTrue(adapter.existsById("fest-1"));
     }
 
     @Test
     void givenNoFestivalier_whenCheckingExistsById_thenReturnsFalse() {
+        // Given / When / Then
         assertFalse(adapter.existsById("non-existing-id"));
     }
 
     @Test
     void givenSavedFestivalier_whenFindById_thenReturnsFestivalierWithCorrectBalance() {
-        Festivalier festivalier = new Festivalier("fest-2", 25);
+        // Given
+        Festivalier festivalier = new Festivalier("fest-2", new TokenBalance(25, 3));
         adapter.save(festivalier);
 
+        // When
         Optional<Festivalier> found = adapter.findById("fest-2");
+
+        // Then
         assertTrue(found.isPresent());
         assertEquals("fest-2", found.get().getId());
         assertEquals(25, found.get().getFoodTokenBalance());
+        assertEquals(3, found.get().getDrinkTokenBalance());
     }
 }

@@ -15,11 +15,15 @@ public class FestivalierEntity {
     @Column(name = "food_token_balance")
     private int foodTokenBalance;
 
+    @Column(name = "drink_token_balance")
+    private int drinkTokenBalance;
+
     protected FestivalierEntity() {}
 
-    public FestivalierEntity(String id, int foodTokenBalance) {
+    public FestivalierEntity(String id, int foodTokenBalance, int drinkTokenBalance) {
         this.id = id;
         this.foodTokenBalance = foodTokenBalance;
+        this.drinkTokenBalance = drinkTokenBalance;
     }
 
     public String getId() {
@@ -28,5 +32,9 @@ public class FestivalierEntity {
 
     public int getFoodTokenBalance() {
         return foodTokenBalance;
+    }
+
+    public int getDrinkTokenBalance() {
+        return drinkTokenBalance;
     }
 }
